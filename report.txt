@@ -1,0 +1,17 @@
+The project is a CLI for transferring sensitive data. It uses age for encryption and verifies file integrity using she256 sum. It ensures the file can only be read by the intended people and the file is not damages during the transfer process. For this particulate case, security of privacy is a matter of human rights and safety. 
+
+In case of failure and data is leaked, it can put witnesses and field researchers at harm. Furthermore, If a file is maliciously altered in transit, it compromises the entire investigation and renders the evidence unusable in legal settings, or any settings for that matter.
+
+
+To implement the system, first, run /setup_keys.sh on both the sender and receiver machines to generate passwordless Ed25519 SSH keys. Then, the receiver must securely share their generated public key (~/.ssh/id_ed25519.pub) with the sender before any transfer can occur. Second, the sender runs /send.sh to encrypt the file, and generate checksum, which is used to verify if the file is okay after transfer. On the receiver's side, they run /receive.sh using the private key and check it against the checksum to verify the authenticity.
+
+I used ssh-keygen, age, and scp for this system. I used ssh over older standards like RSA because Ed25519 offers better security with smaller key sizes and faster performance. Age is a rather simple encryption method that is rather effective and scp is used to create a secure tunnel for transfer of data.
+
+I honestly found this project pretty hard because I was trying to run it on WSL, which was probably a bad idea. I did not really understand how to handle the two separate scripts at the same time. I had to use a good chunk of help from my father. He helped me write good code for the transfer protocol and helped me test it. I also made use of some AI because I was struggling with the timestamping and logs and my father was not available to help :(
+
+I was also unable to move the file on my laptop to a git repo. I ended up copying the code manually into files in git. Rather ineffective but I hope no code was lost during this process.
+
+There are a few limitations for this system. The first is key distribution. The system assumes the receiver's public key is already safely in the sender's possession. It does not solve the "initial key exchange" problem. Second, while the content is encrypted, scp does not hide metadata. An observer can still see that the sender communicated with the receiver's IP address at a specific time. 
+
+
+
